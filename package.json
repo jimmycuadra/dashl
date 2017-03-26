@@ -1,0 +1,12 @@
+{
+  "name": "dashl",
+  "version": "0.0.0",
+  "description": "A dashboard for my home.",
+  "main": "index.js",
+  "repository": "https://github.com/jimmycuadra/dashl.git",
+  "author": "Jimmy Cuadra <jimmy@jimmycuadra.com>",
+  "license": "MIT",
+  "dependencies": {
+    "elm-css": "^0.6.0"
+  }
+}
