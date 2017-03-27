@@ -28,6 +28,16 @@ $ make
 
 ## Running
 
+Write a config file to `config.json`:
+
+``` json
+{
+  "eventName": "London trip",
+  "eventTime": "23 Apr 2017 00:00:00 GMT-0700",
+  "openWeatherApiKey": "862410e97da44d21e1dc17a9f3330041"
+}
+```
+
 ```
 $ make serve
 $ open http://localhost:3000/
