@@ -7,6 +7,6 @@
   "author": "Jimmy Cuadra <jimmy@jimmycuadra.com>",
   "license": "MIT",
   "dependencies": {
-    "elm-css": "^0.6.0"
+    "elm-live": "^2.7.4"
   }
 }

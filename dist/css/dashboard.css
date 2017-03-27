@@ -1,0 +1,24 @@
+body {
+    background-color: rgb(37, 40, 48);
+    color: rgb(207, 210, 218);
+}
+
+.event-description  span {
+    color: rgb(28, 168, 221);
+}
+
+.full-height {
+    height: 100%;
+}
+
+.pod {
+    background-color: rgb(207, 210, 218);
+    border-radius: 5px;
+    color: rgb(37, 40, 48);
+    display: inline-block;
+    font-family: monospace;
+    min-width: 188px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding: 20px;
+}
