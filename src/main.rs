@@ -7,7 +7,7 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
-use std::io::Read;
+use std::io::{Error as IoError, Read};
 use std::fs::File;
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4};
 
@@ -36,13 +36,7 @@ struct IndexHtml {
 
 #[derive(Clone)]
 struct Dashl {
-    css_dashboard_css: String,
     index_html: String,
-    js_dashboard_js: String,
-    vendor_css_bootstrap_min_css: String,
-    vendor_js_bootstrap_min_js: String,
-    vendor_js_jquery_3_2_0_slim_min_js: String,
-    vendor_js_tether_1_4_0_min_js: String,
 }
 
 impl Service for Dashl {
@@ -53,13 +47,6 @@ impl Service for Dashl {
 
     fn call(&self, request: Self::Request) -> Self::Future {
         match request.path() {
-            "/css/dashboard.css" => {
-                ok(
-                    Response::new()
-                        .with_header(ContentType("text/css".parse().unwrap()))
-                        .with_body(self.css_dashboard_css.clone())
-                )
-            }
             "/" | "/index.html" => {
                 ok(
                     Response::new()
@@ -67,70 +54,46 @@ impl Service for Dashl {
                         .with_body(self.index_html.clone())
                 )
             }
-            "/js/dashboard.js" => {
-                ok(
-                    Response::new()
-                        .with_header(ContentType("text/javascript".parse().unwrap()))
-                        .with_body(self.js_dashboard_js.clone())
-                )
-            }
-            "/vendor/css/bootstrap.min.css" => {
-                ok(
-                    Response::new()
-                        .with_header(ContentType("text/css".parse().unwrap()))
-                        .with_body(self.vendor_css_bootstrap_min_css.clone())
-                )
-            }
-            "/vendor/js/bootstrap.min.js" => {
-                ok(
-                    Response::new()
-                        .with_header(ContentType("text/javascript".parse().unwrap()))
-                        .with_body(self.vendor_js_bootstrap_min_js.clone())
-                )
-            }
-            "/vendor/js/jquery-3.2.0.slim.min.js" => {
-                ok(
-                    Response::new()
-                        .with_header(ContentType("text/javascript".parse().unwrap()))
-                        .with_body(self.vendor_js_jquery_3_2_0_slim_min_js.clone())
-                )
-            }
-            "/vendor/js/tether-1.4.0.min.js" => {
-                ok(
-                    Response::new()
-                        .with_header(ContentType("text/javascript".parse().unwrap()))
-                        .with_body(self.vendor_js_tether_1_4_0_min_js.clone())
-                )
-            }
-            _ => {
-                ok(Response::new().with_status(StatusCode::Ok))
+            path => {
+                match load_file(&path[1..path.len()]) {
+                    Ok(file) => {
+                        let content_type = if path.ends_with(".css") {
+                            "text/css".parse().unwrap()
+                        } else if path.ends_with(".js") {
+                            "text/js".parse().unwrap()
+                        } else {
+                            "application/octet-stream".parse().unwrap()
+                        };
+
+                        ok(
+                            Response::new()
+                                .with_header(ContentType(content_type))
+                                .with_body(file)
+                        )
+                    }
+                    Err(_) => ok(Response::new().with_status(StatusCode::NotFound)),
+                }
             }
         }
     }
 }
 
-fn load_file(path: &str) -> String {
-    let mut file = File::open(path).unwrap();
+fn load_file(path: &str) -> Result<String, IoError> {
+    let mut file = File::open(path)?;
     let mut contents = String::new();
-    file.read_to_string(&mut contents).unwrap();
+    file.read_to_string(&mut contents)?;
 
-    contents
+    Ok(contents)
 }
 
 fn main() {
-    let config_contents = load_file("config.json");
+    let config_contents = load_file("config.json").expect("config.json is missing");
     let config: Config = serde_json::from_str(&config_contents).unwrap();
     let template = IndexHtml { config: serde_json::to_string(&config).unwrap() };
     let index_html = template.render();
 
     let dashl = Dashl {
-        css_dashboard_css: load_file("dist/css/dashboard.css"),
         index_html: index_html,
-        js_dashboard_js: load_file("dist/js/dashboard.js"),
-        vendor_css_bootstrap_min_css: load_file("dist/vendor/css/bootstrap.min.css"),
-        vendor_js_bootstrap_min_js: load_file("dist/vendor/js/bootstrap.min.js"),
-        vendor_js_jquery_3_2_0_slim_min_js: load_file("dist/vendor/js/jquery-3.2.0.slim.min.js"),
-        vendor_js_tether_1_4_0_min_js: load_file("dist/vendor/js/tether-1.4.0.min.js"),
     };
 
     let ip_address = Ipv4Addr::new(127, 0, 0, 1);
