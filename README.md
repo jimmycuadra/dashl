@@ -1,19 +1,23 @@
 # Dashl
 
 **Dashl** is a dashboard app to be displayed on a Raspberry Pi kiosk I have set up in my home.
+The plan is to include the following widgets:
+
+* Countdown timer
+* Local weather
+* Kubernetes cluster metrics
+* Status of apps currently deployed to the Kubernetes cluster
 
 ## Development dependencies
 
-The following must be installed manually first:
+* Elm Platform
+* Make
+* Rust
 
-* `brew`
-* `make`
-* `node`
-
-## Installation
+## Setup
 
 ```
-$ make bootstrap
+$ make deps
 ```
 
 ## Building
@@ -22,12 +26,11 @@ $ make bootstrap
 $ make
 ```
 
-The site will be built into `dist/`.
-
-## Live reloading dev server
+## Running
 
 ```
-$ make dev
+$ make serve
+$ open http://localhost:3000/
 ```
 
 ## Legal
