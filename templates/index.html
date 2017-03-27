@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Dashl</title>
+  <link rel="stylesheet" href="/vendor/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+  <div id="dashboard" class="container-fluid"></div>
+  <script src="/vendor/js/jquery-3.2.0.slim.min.js"></script>
+  <script src="/vendor/js/tether-1.4.0.min.js"></script>
+  <script src="/vendor/js/bootstrap.min.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script type="text/javascript">
+    var node = document.getElementById("dashboard");
+    var app = Elm.Main.embed(node, {{ config }});
+  </script>
+</body>
+</html>
