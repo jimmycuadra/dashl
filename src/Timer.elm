@@ -7,17 +7,16 @@ import Time exposing (Time)
 import Update exposing (Msg)
 
 
-view : Model -> Html Msg
+view : Model -> List (Html Msg)
 view model =
-    div [ class "text-center" ]
-        [ eventDescriptionView model.description
-        , timeRemaining model |> timeRemainingView
-        ]
+    [ eventDescriptionView model.description
+    , timeRemaining model |> timeRemainingView
+    ]
 
 
 eventDescriptionView : String -> Html Msg
 eventDescriptionView description =
-    div [ class "row", class "event-description" ]
+    div [ class "row", class "event-description text-center" ]
         [ div [ class "col" ]
             [ h1 [ class "display-1" ]
                 [ span [] [ text description ]
@@ -29,7 +28,7 @@ eventDescriptionView description =
 
 timeRemainingView : Remaining -> Html Msg
 timeRemainingView remaining =
-    div [ class "row" ]
+    div [ class "row text-center" ]
         [ timeRemainingComponentView remaining.days "days"
         , timeRemainingComponentView remaining.hours "hours"
         , timeRemainingComponentView remaining.minutes "mins"

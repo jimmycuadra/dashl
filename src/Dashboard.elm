@@ -8,6 +8,7 @@ import Task
 import Time exposing (Time)
 import Timer
 import Update exposing (Msg)
+import Weather
 
 
 init : ( Model, Cmd Msg )
@@ -41,7 +42,6 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div [ class "row" ]
-        [ div [ class "col" ]
-            [ Timer.view model
-            ]
+        [ div [ class "col" ] (Timer.view model)
+        , div [ class "col" ] (Weather.view model)
         ]
