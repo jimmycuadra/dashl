@@ -9,17 +9,17 @@ import Update exposing (Msg)
 
 view : Model -> List (Html Msg)
 view model =
-    [ eventDescriptionView model.description
+    [ eventNameView model.eventName
     , timeRemaining model |> timeRemainingView
     ]
 
 
-eventDescriptionView : String -> Html Msg
-eventDescriptionView description =
-    div [ class "row", class "event-description text-center" ]
+eventNameView : String -> Html Msg
+eventNameView eventName =
+    div [ class "row", class "event-name text-center" ]
         [ div [ class "col" ]
             [ h1 [ class "display-1" ]
-                [ span [] [ text description ]
+                [ span [] [ text eventName ]
                 , text " in"
                 ]
             ]

@@ -4,7 +4,7 @@ import Time exposing (Time)
 
 
 type alias Model =
-    { description : String
+    { eventName : String
     , currentTime : Maybe Time
     , eventTime : Time
     }

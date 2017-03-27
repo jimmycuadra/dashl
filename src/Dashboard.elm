@@ -11,8 +11,15 @@ import Update exposing (Msg)
 import Weather
 
 
-init : ( Model, Cmd Msg )
-init =
+type alias Flags =
+    { eventName : String
+    , eventTime : String
+    , openWeatherApiKey : String
+    }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     ( Model
         "London trip"
         Nothing

@@ -1,14 +1,14 @@
 module Main exposing (..)
 
-import Dashboard exposing (init, subscriptions, view)
-import Html exposing (program)
+import Dashboard exposing (Flags, init, subscriptions, view)
+import Html exposing (programWithFlags)
 import Model exposing (Model)
 import Update exposing (Msg, update)
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    program
+    programWithFlags
         { init = init
         , subscriptions = subscriptions
         , update = update
