@@ -1,14 +1,16 @@
 module Main exposing (..)
 
-import Dashboard
+import Dashboard exposing (init, subscriptions, view)
 import Html exposing (program)
+import Model exposing (Model)
+import Update exposing (Msg, update)
 
 
-main : Program Never Dashboard.Model Dashboard.Msg
+main : Program Never Model Msg
 main =
     program
-        { init = Dashboard.init
-        , view = Dashboard.view
-        , update = Dashboard.update
-        , subscriptions = Dashboard.subscriptions
+        { init = init
+        , subscriptions = subscriptions
+        , update = update
+        , view = view
         }
