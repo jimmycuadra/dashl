@@ -3,7 +3,7 @@ build:
 	elm make src/Main.elm --warn --output js/dashboard.js
 	cargo build
 
-.PHONY: serve
+.PHONY: run
 run:
 	cargo run
 

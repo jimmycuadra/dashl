@@ -39,7 +39,7 @@ Write a config file to `config.json`:
 ```
 
 ```
-$ make serve
+$ make run
 $ open http://localhost:3000/
 ```
 
