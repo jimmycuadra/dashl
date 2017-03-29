@@ -14,16 +14,17 @@ import Weather
 type alias Flags =
     { eventName : String
     , eventTime : String
-    , openWeatherApiKey : String
+    , openWeatherMapApiKey : String
     }
 
 
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     ( Model
-        "London trip"
         Nothing
-        (Date.toTime (Date.fromString "23 Apr 2017 00:00:00 GMT-0700" |> Result.withDefault (Date.fromTime 0)))
+        flags.eventName
+        (Date.toTime (Date.fromString flags.eventTime |> Result.withDefault (Date.fromTime 0)))
+        flags.openWeatherMapApiKey
     , getTime
     )
 

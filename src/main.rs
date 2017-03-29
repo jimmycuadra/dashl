@@ -24,7 +24,7 @@ struct Config {
     event_name: String,
     #[serde(rename = "eventTime")]
     event_time: String,
-    #[serde(rename = "openWeatherApiKey")]
+    #[serde(rename = "openWeatherMapApiKey")]
     open_weather_map_api_key: String,
 }
 

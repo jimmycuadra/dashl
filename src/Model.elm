@@ -4,7 +4,8 @@ import Time exposing (Time)
 
 
 type alias Model =
-    { eventName : String
-    , currentTime : Maybe Time
+    { currentTime : Maybe Time
+    , eventName : String
     , eventTime : Time
+    , openWeatherMapApiKey : String
     }
