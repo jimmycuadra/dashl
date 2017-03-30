@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Dashl</title>
-  <link rel="stylesheet" href="/vendor/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="vendor/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
 </head>
 <body>
   <div class="container-fluid">
@@ -13,7 +13,7 @@
       <div class="col">
         <div class="row event-name">
           <div class="col">
-            <h1 class="display-1"><span id="timer-event-name">{{ config.event_name }}</span> in</h1>
+            <h1 class="display-1"><span id="timer-event-name"></span> in</h1>
           </div>
         </div>
         <div class="row">
@@ -58,15 +58,16 @@
       </div>
     </div>
   </div>
-  <script src="/vendor/js/jquery-3.2.0.slim.min.js"></script>
-  <script src="/vendor/js/tether-1.4.0.min.js"></script>
-  <script src="/vendor/js/bootstrap.min.js"></script>
-  <script src="/vendor/js/countdown-2.6.0.min.js"></script>
-  <script src="/vendor/js/moment-2.18.1.js"></script>
-  <script src="/js/dashboard.js"></script>
+  <script src="vendor/js/jquery-3.2.0.slim.min.js"></script>
+  <script src="vendor/js/tether-1.4.0.min.js"></script>
+  <script src="vendor/js/bootstrap.min.js"></script>
+  <script src="vendor/js/countdown-2.6.0.min.js"></script>
+  <script src="vendor/js/moment-2.18.1.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/dashboard.js"></script>
   <script type="text/javascript">
     ready(function () {
-      var app = new App({{ json }});
+      var app = new Dashl(DASHL_CONFIG);
     });
   </script>
 </body>

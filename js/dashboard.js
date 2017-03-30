@@ -1,5 +1,7 @@
 !(function (exports, undefined) {
-  function App(config) {
+  function Dashl(config) {
+    document.getElementById('timer-event-name').innerHTML = config.eventName;
+
     this.timer = {
       days: document.getElementById('timer-event-days'),
       hours: document.getElementById('timer-event-hours'),
@@ -26,7 +28,7 @@
     this.getWeather();
   }
 
-  App.prototype.getWeather = function () {
+  Dashl.prototype.getWeather = function () {
     let request = new XMLHttpRequest();
 
     request.open(
@@ -54,16 +56,14 @@
     request.send();
   };
 
-  App.prototype.renderForecast = function (forecast, parentElement) {
+  Dashl.prototype.renderForecast = function (forecast, parentElement) {
     let element = document.createElement('p');
     element.innerHTML = moment(forecast.dt_txt).calendar() +
       "<br/>" + forecast.main.temp + "&deg;F (" + forecast.weather[0].description + ")";
     parentElement.prepend(element);
   }
 
-  App.prototype.renderWeather = function (data) {
-    console.log(data);
-
+  Dashl.prototype.renderWeather = function (data) {
     let forecasts = data.list.length;
     let i;
     let weather1 = document.getElementById('weather-1');
@@ -93,14 +93,14 @@
     }
   };
 
-  App.prototype.updateTimer = function (timespan) {
+  Dashl.prototype.updateTimer = function (timespan) {
     this.timer.days.innerHTML = timespan.days;
     this.timer.hours.innerHTML = timespan.hours;
     this.timer.mins.innerHTML = timespan.minutes;
     this.timer.secs.innerHTML = timespan.seconds;
   };
 
-  exports.App = App;
+  exports.Dashl = Dashl;
 })(window);
 
 function ready(fn) {
