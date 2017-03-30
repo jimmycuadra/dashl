@@ -1,17 +1,49 @@
-module Timer exposing (view)
+module Timer exposing (Model, Msg, init, subscriptions, update, view)
 
-import Model exposing (Model)
 import Html exposing (..)
 import Html.Attributes exposing (class)
+import Task
 import Time exposing (Time)
-import Update exposing (Msg)
 
 
-view : Model -> List (Html Msg)
+type alias Model =
+    { currentTime : Maybe Time
+    , eventName : String
+    , eventTime : Time
+    }
+
+
+type Msg
+    = Tick Time
+
+
+init : Cmd Msg
+init =
+    Task.perform Tick Time.now
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Time.every Time.second Tick
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Tick time ->
+            { model | currentTime = Just time } ! []
+
+
+view : Model -> Html Msg
 view model =
-    [ eventNameView model.eventName
-    , timeRemaining model |> timeRemainingView
-    ]
+    div []
+        [ eventNameView model.eventName
+        , timeRemaining model |> timeRemainingView
+        ]
+
+
+
+-- private
 
 
 eventNameView : String -> Html Msg

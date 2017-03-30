@@ -1,10 +1,28 @@
-module Weather exposing (..)
+module Weather exposing (Model, Msg, update, view)
 
-import Model exposing (Model)
 import Html exposing (..)
-import Update exposing (Msg)
 
 
-view : Model -> List (Html Msg)
+type alias Model =
+    { openWeatherMapApiKey : String
+    }
+
+
+type Msg
+    = WantWeather
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        WantWeather ->
+            model ! []
+
+
+view : Model -> Html Msg
 view model =
-    [ div [] [] ]
+    div [] []
+
+
+
+-- private
