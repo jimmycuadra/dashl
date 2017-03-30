@@ -20,3 +20,8 @@ body {
     min-width: 25%;
     padding: 20px 30px;
 }
+
+.widget {
+  padding: 20px 0;
+  text-align: center;
+}
