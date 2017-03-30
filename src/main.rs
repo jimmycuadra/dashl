@@ -18,20 +18,25 @@ use hyper::header::ContentType;
 use hyper::server::{Http, Request, Response, Service};
 use hyper::status::StatusCode;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 struct Config {
+    #[serde(rename = "countryCode")]
+    country_code: String,
     #[serde(rename = "eventName")]
     event_name: String,
     #[serde(rename = "eventTime")]
     event_time: String,
     #[serde(rename = "openWeatherMapApiKey")]
     open_weather_map_api_key: String,
+    #[serde(rename = "zipCode")]
+    zip_code: String,
 }
 
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexHtml {
-    config: String,
+    config: Config,
+    json: String,
 }
 
 #[derive(Clone)]
@@ -89,7 +94,10 @@ fn load_file(path: &str) -> Result<String, IoError> {
 fn main() {
     let config_contents = load_file("config.json").expect("config.json is missing");
     let config: Config = serde_json::from_str(&config_contents).unwrap();
-    let template = IndexHtml { config: serde_json::to_string(&config).unwrap() };
+    let template = IndexHtml {
+        json: serde_json::to_string(&config).unwrap(),
+        config: config,
+    };
     let index_html = template.render();
 
     let dashl = Dashl {

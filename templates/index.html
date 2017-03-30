@@ -8,14 +8,50 @@
   <link rel="stylesheet" href="/css/dashboard.css" />
 </head>
 <body>
-  <div id="dashboard" class="container-fluid"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="row event-name text-center">
+          <div class="col">
+            <h1 class="display-1"><span id="timer-event-name">{{ config.event_name }}</span> in</h1>
+          </div>
+        </div>
+        <div class="row text-center">
+          <div class="col-3">
+            <h2 class="timer-value" id="timer-event-days"></h2>
+            <div class="timer-unit">days</div>
+          </div>
+          <div class="col-3">
+            <h2 class="timer-value" id="timer-event-hours"></h2>
+            <div class="timer-unit">hours</div>
+          </div>
+          <div class="col-3">
+            <h2 class="timer-value" id="timer-event-mins"></h2>
+            <div class="timer-unit">mins</div>
+          </div>
+          <div class="col-3">
+            <h2 class="timer-value" id="timer-event-secs"></h2>
+            <div class="timer-unit">secs</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
   <script src="/vendor/js/jquery-3.2.0.slim.min.js"></script>
   <script src="/vendor/js/tether-1.4.0.min.js"></script>
   <script src="/vendor/js/bootstrap.min.js"></script>
+  <script src="/vendor/js/countdown-2.6.0.min.js"></script>
   <script src="/js/dashboard.js"></script>
   <script type="text/javascript">
-    var node = document.getElementById("dashboard");
-    var app = Elm.Main.embed(node, {{ config }});
+    var app = new App({{ json }});
   </script>
 </body>
 </html>
