@@ -1,43 +1,39 @@
 !(function (exports, undefined) {
   function Dashl(config) {
-    document.getElementById('timer-event-name').innerHTML = config.eventName;
+    document.getElementById('timer-event-name').innerHTML = config.timer.name;
+    document.getElementById('weather-zip-code').innerHTML = config.weather.zipCode;
 
     this.timer = {
       days: document.getElementById('timer-event-days'),
       hours: document.getElementById('timer-event-hours'),
       mins: document.getElementById('timer-event-mins'),
       secs: document.getElementById('timer-event-secs'),
+      time: config.timer.time
     };
 
+    this.weather = {
+      darkSkyApiKey: config.weather.darkSkyApiKey,
+      element: document.getElementById('weather-values'),
+      latitude: config.weather.latitude,
+      longitude: config.weather.longitude,
+    };
+  }
+
+  Dashl.prototype.start = function () {
     this.timer.countdown = countdown(
-      Date.parse('23 Apr 2017 00:00:00 GMT-0700'),
+      Date.parse(this.timer.time),
       this.updateTimer.bind(this),
       countdown.DAYS | countdown.HOURS | countdown.MINUTES | countdown.SECONDS
     );
 
-    this.weather = {
-      element: document.getElementById('weather'),
-
-      countryCode: config.countryCode,
-      openWeatherMapApiKey: config.openWeatherMapApiKey,
-      zipCode: config.zipCode,
-
-      interval: setInterval(this.getWeather.bind(this), 900000) // 15 minutes
-    };
-
+    this.weather.interval = setInterval(this.getWeather.bind(this), 3600000); // 1 hour
     this.getWeather();
-  }
+  };
 
   Dashl.prototype.getWeather = function () {
     let request = new XMLHttpRequest();
 
-    request.open(
-      'GET',
-      'http://api.openweathermap.org/data/2.5/forecast?units=imperial&zip=' +
-        this.weather.zipCode + ',' + this.weather.countryCode +
-        '&appid=' + this.weather.openWeatherMapApiKey,
-      true
-    );
+    request.open('GET', 'http://localhost:3000/forecast', true);
 
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
@@ -45,58 +41,65 @@
 
         this.renderWeather(data);
       } else {
-        console.log(request);
+        console.error(request);
       }
     }.bind(this);
 
-    request.onerror = function() {
-      console.log('Connection error');
+    request.onerror = function(event) {
+      console.error('Connection error', event);
     };
 
     request.send();
   };
 
-  Dashl.prototype.renderForecast = function (forecast, parentElement) {
-    let element = document.createElement('p');
-    element.innerHTML = moment(forecast.dt_txt).calendar() +
-      "<br/>" + forecast.main.temp + "&deg;F (" + forecast.weather[0].description + ")";
-    parentElement.prepend(element);
+  Dashl.prototype.renderForecast = function (forecast, index) {
+    if (index !== 0 && index % 4 == 0) {
+      let breaker = document.createElement('div');
+      breaker.classList.add('w-100');
+      this.weather.element.appendChild(breaker);
+    }
+
+    let col = document.createElement('div');
+    col.classList.add('col');
+
+    let elements = [];
+
+    if (typeof forecast.time != 'undefined') {
+      let day = document.createElement('h5');
+      day.innerHTML = moment.unix(forecast.time).format('dddd, M/D');
+      elements.push(day);
+    }
+
+    if (
+      typeof forecast.temperatureMax != 'undefined' && typeof forecast.temperatureMin != 'undefined'
+    ) {
+      let temperatures = document.createElement('p');
+      temperatures.innerHTML = forecast.temperatureMax + '&deg;F high<br />' +
+        forecast.temperatureMin + '&deg;F low';
+      elements.push(temperatures);
+    }
+
+    elements.forEach(function (element) {
+      col.appendChild(element);
+    }.bind(this));
+
+    this.weather.element.appendChild(col);
   }
 
   Dashl.prototype.renderWeather = function (data) {
-    let forecasts = data.list.length;
-    let i;
-    let weather1 = document.getElementById('weather-1');
-    let weather2 = document.getElementById('weather-2');
-    let weather3 = document.getElementById('weather-3');
-    let weather4 = document.getElementById('weather-4');
-    let weather5 = document.getElementById('weather-5');
+    let forecasts = data && data.daily && data.daily.data;
 
-    weather1.innerHTML = "";
-    weather2.innerHTML = "";
-    weather3.innerHTML = "";
-    weather4.innerHTML = "";
-    weather5.innerHTML = "";
+    if (typeof forecasts === 'undefined') {
+      console.log('No daily forecasts were present in the response.');
 
-    for (i = forecasts - 1; i > forecasts - 9; i--) {
-      this.renderForecast(data.list[i], weather5);
+      return;
     }
 
-    for (i = forecasts - 9; i > forecasts - 17; i--) {
-      this.renderForecast(data.list[i], weather4);
-    }
+    this.weather.element.innerHTML = '';
 
-    for (i = forecasts - 17; i > forecasts - 25; i--) {
-      this.renderForecast(data.list[i], weather3);
-    }
-
-    for (i = forecasts - 25; i > forecasts - 33; i--) {
-      this.renderForecast(data.list[i], weather2);
-    }
-
-    for (i = forecasts - 33; i > 0; i--) {
-      this.renderForecast(data.list[i], weather1);
-    }
+    forecasts.forEach(function (forecast, index) {
+      this.renderForecast(forecast, index);
+    }.bind(this));
   };
 
   Dashl.prototype.updateTimer = function (timespan) {

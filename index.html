@@ -13,7 +13,7 @@
       <div class="col">
         <div class="row event-name">
           <div class="col">
-            <h1 class="display-1"><span id="timer-event-name"></span> in</h1>
+            <h1><span id="timer-event-name" class="widget-subject"></span> in</h1>
           </div>
         </div>
         <div class="row">
@@ -40,20 +40,10 @@
       <div class="col justify-content-center">
         <div class="row">
           <div class="col">
-            <h1 class="display-1">Weather</h1>
+            <h1>Weather in <span id="weather-zip-code" class="widget-subject"></span></h1>
           </div>
         </div>
-        <div class="row">
-          <div class="col" id="weather-1">
-          </div>
-          <div class="col" id="weather-2">
-          </div>
-          <div class="col" id="weather-3">
-          </div>
-          <div class="col" id="weather-4">
-          </div>
-          <div class="col" id="weather-5">
-          </div>
+        <div class="row" id="weather-values">
         </div>
       </div>
     </div>
@@ -63,11 +53,31 @@
   <script src="vendor/js/bootstrap.min.js"></script>
   <script src="vendor/js/countdown-2.6.0.min.js"></script>
   <script src="vendor/js/moment-2.18.1.js"></script>
-  <script src="js/config.js"></script>
   <script src="js/dashboard.js"></script>
   <script type="text/javascript">
     ready(function () {
-      var app = new Dashl(DASHL_CONFIG);
+      let dashl_config;
+      let app;
+
+      let request = new XMLHttpRequest();
+
+      request.open('GET', 'http://localhost:3000/config.json', true);
+
+      request.onload = function () {
+        if (this.status >= 200 && this.status < 400) {
+            dashl_config = JSON.parse(this.response);
+            app = new Dashl(dashl_config);
+            app.start();
+          } else {
+            console.error(request);
+          }
+      };
+
+      request.onerror = function(event) {
+        console.error('Connection error', event);
+      };
+
+      request.send();
     });
   </script>
 </body>

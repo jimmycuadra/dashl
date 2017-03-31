@@ -1,16 +1,19 @@
 # Dashl
 
 **Dashl** is a dashboard app to be displayed on a Raspberry Pi kiosk I have set up in my home.
-The plan is to include the following widgets:
+It includes the following widgets:
 
 * Countdown timer
 * Local weather
-* Kubernetes cluster metrics
-* Status of apps currently deployed to the Kubernetes cluster
+
+# Build dependencies
+
+* [Rust](https://www.rust-lang.org/)
 
 ## Usage
 
-Copy `js/config.sample.js` to `js/config.js` and fill in the values you want.
+Copy `js/config.sample.json` to `js/config.json` and fill in the values you want.
+Run `cargo run` to build and start the proxy server.
 Then open `index.html` in a browser.
 
 ## Legal

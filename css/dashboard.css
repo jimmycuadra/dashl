@@ -3,10 +3,6 @@ body {
     color: rgb(207, 210, 218);
 }
 
-.event-name  span {
-    color: rgb(28, 168, 221);
-}
-
 .timer-unit {
     text-transform: uppercase;
 }
@@ -24,4 +20,8 @@ body {
 .widget {
   padding: 20px 0;
   text-align: center;
+}
+
+.widget-subject {
+    color: rgb(28, 168, 221);
 }

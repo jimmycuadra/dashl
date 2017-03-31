@@ -1,0 +1,12 @@
+{
+  "timer": {
+    "name": "name of an event you're looking forward to",
+    "time": "the time of the event, any string parseable by Date.parse"
+  },
+  "weather": {
+    "darkSkyApiKey": "secret",
+    "latitude": "latitude of the location you want forecasts for",
+    "longitude": "longitude of the location you want forecasts for",
+    "zipCode": "the zip code corresponding to the lat/long, for display"
+  }
+}
