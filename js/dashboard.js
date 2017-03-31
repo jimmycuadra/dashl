@@ -72,6 +72,12 @@
     let weather4 = document.getElementById('weather-4');
     let weather5 = document.getElementById('weather-5');
 
+    weather1.innerHTML = "";
+    weather2.innerHTML = "";
+    weather3.innerHTML = "";
+    weather4.innerHTML = "";
+    weather5.innerHTML = "";
+
     for (i = forecasts - 1; i > forecasts - 9; i--) {
       this.renderForecast(data.list[i], weather5);
     }
