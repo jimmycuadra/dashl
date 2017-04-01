@@ -1,5 +1,6 @@
 module Weather.View exposing (view)
 
+import Date
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import RemoteData exposing (WebData)
@@ -79,7 +80,20 @@ forecastTimeView : Maybe Int -> Html Weather.Types.Msg
 forecastTimeView maybeTime =
     case maybeTime of
         Just time ->
-            text (toString time)
+            let
+                date =
+                    Date.fromTime (toFloat (time * 1000))
+
+                month =
+                    Date.month date
+
+                day =
+                    Date.dayOfWeek date
+
+                dayNumber =
+                    Date.day date
+            in
+                text <| (toString day) ++ ", " ++ (toString month) ++ "/" ++ (toString dayNumber)
 
         Nothing ->
             text ""
