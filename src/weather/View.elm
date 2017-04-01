@@ -58,10 +58,22 @@ renderForecasts : Maybe (List Weather.Types.Forecast) -> List (Html Weather.Type
 renderForecasts maybeList =
     case maybeList of
         Just forecasts ->
-            List.map forecastView forecasts
+            List.concat (List.indexedMap forecastWithBreakerView forecasts)
 
         Nothing ->
             []
+
+
+forecastWithBreakerView : Int -> Weather.Types.Forecast -> List (Html Weather.Types.Msg)
+forecastWithBreakerView index forecast =
+    let
+        breaker =
+            if (index /= 0) && (index % 4 == 0) then
+                [ div [ class "w-100" ] [] ]
+            else
+                []
+    in
+        breaker ++ [ forecastView forecast ]
 
 
 forecastView : Weather.Types.Forecast -> Html Weather.Types.Msg
