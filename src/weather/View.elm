@@ -1,6 +1,6 @@
 module Weather.View exposing (view)
 
-import Date
+import Date exposing (Day(..), Month(..))
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import RemoteData exposing (WebData)
@@ -105,10 +105,75 @@ forecastTimeView maybeTime =
                 dayNumber =
                     Date.day date
             in
-                text <| (toString day) ++ ", " ++ (toString month) ++ "/" ++ (toString dayNumber)
+                text <| (fullDay day) ++ ", " ++ (monthNumber month) ++ "/" ++ (toString dayNumber)
 
         Nothing ->
             text ""
+
+
+fullDay : Day -> String
+fullDay day =
+    case day of
+        Mon ->
+            "Monday"
+
+        Tue ->
+            "Tuesday"
+
+        Wed ->
+            "Wednesday"
+
+        Thu ->
+            "Thursday"
+
+        Fri ->
+            "Friday"
+
+        Sat ->
+            "Saturday"
+
+        Sun ->
+            "Sunday"
+
+
+monthNumber : Month -> String
+monthNumber month =
+    case month of
+        Jan ->
+            "1"
+
+        Feb ->
+            "2"
+
+        Mar ->
+            "3"
+
+        Apr ->
+            "4"
+
+        May ->
+            "5"
+
+        Jun ->
+            "6"
+
+        Jul ->
+            "7"
+
+        Aug ->
+            "8"
+
+        Sep ->
+            "9"
+
+        Oct ->
+            "10"
+
+        Nov ->
+            "11"
+
+        Dec ->
+            "12"
 
 
 forecastTemperatureView : Maybe Float -> String -> Html Weather.Types.Msg
