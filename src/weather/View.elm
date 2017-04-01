@@ -11,14 +11,14 @@ view model =
     div [ class "row widget" ]
         [ div [ class "col justify-content-center" ]
             [ div [ class "row" ]
-                (div [ class "col" ]
+                [ div [ class "col" ]
                     [ h1 []
                         [ span [ class "widget-subject" ] [ text model.name ]
                         , text " weather"
                         ]
                     ]
-                    :: (renderDarkSkyData model.darkSkyData)
-                )
+                ]
+            , div [ class "row" ] (renderDarkSkyData model.darkSkyData)
             ]
         ]
 
@@ -65,33 +65,31 @@ renderForecasts maybeList =
 
 forecastView : Weather.Types.Forecast -> Html Weather.Types.Msg
 forecastView forecast =
-    div [ class "row" ]
-        [ div [ class "col" ]
-            [ h5 [] [ forecastTimeView forecast.time ]
-            , p []
-                [ forecastTemperatureView forecast.temperatureMax "°F high"
-                , br [] []
-                , forecastTemperatureView forecast.temperatureMin "°F low"
-                ]
+    div [ class "col" ]
+        [ h5 [] [ forecastTimeView forecast.time ]
+        , p []
+            [ forecastTemperatureView forecast.temperatureMax "°F high"
+            , br [] []
+            , forecastTemperatureView forecast.temperatureMin "°F low"
             ]
         ]
 
 
-forecastTimeView : Maybe String -> Html Weather.Types.Msg
+forecastTimeView : Maybe Int -> Html Weather.Types.Msg
 forecastTimeView maybeTime =
     case maybeTime of
         Just time ->
-            text time
+            text (toString time)
 
         Nothing ->
             text ""
 
 
-forecastTemperatureView : Maybe String -> String -> Html Weather.Types.Msg
+forecastTemperatureView : Maybe Float -> String -> Html Weather.Types.Msg
 forecastTemperatureView maybeTemperature suffix =
     case maybeTemperature of
         Just temperature ->
-            text (temperature ++ suffix)
+            text ((toString temperature) ++ suffix)
 
         Nothing ->
             text ""

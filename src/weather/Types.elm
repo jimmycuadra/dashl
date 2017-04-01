@@ -27,7 +27,7 @@ type alias Daily =
 
 
 type alias Forecast =
-    { time : Maybe String
-    , temperatureMax : Maybe String
-    , temperatureMin : Maybe String
+    { time : Maybe Int
+    , temperatureMax : Maybe Float
+    , temperatureMin : Maybe Float
     }
