@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class)
 import Model exposing (Model)
 import Msg exposing (Msg(..))
+import RemoteData
 import Timer.Init
 import Timer.Subscriptions
 import Timer.Update
@@ -49,7 +50,7 @@ init config =
                 }
             , weather =
                 { darkSkyApiKey = config.weather.darkSkyApiKey
-                , forecasts = []
+                , darkSkyData = RemoteData.NotAsked
                 , latitude = config.weather.latitude
                 , longitude = config.weather.longitude
                 , name = config.weather.name

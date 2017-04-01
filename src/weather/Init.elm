@@ -1,8 +1,9 @@
 module Weather.Init exposing (init)
 
 import Weather.Types
+import Weather.Update
 
 
 init : Cmd Weather.Types.Msg
 init =
-    Cmd.none
+    Weather.Update.fetchForecasts
