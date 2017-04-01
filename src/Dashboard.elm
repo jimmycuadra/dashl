@@ -5,11 +5,11 @@ import Html exposing (..)
 import Html.Attributes exposing (class)
 import Model exposing (Model)
 import Msg exposing (Msg(..))
-import Timer
+import Timer.Init
 import Timer.Subscriptions
 import Timer.Update
 import Timer.View
-import Weather
+import Weather.Init
 import Weather.Subscriptions
 import Weather.Update
 import Weather.View
@@ -56,7 +56,7 @@ init config =
                 }
             }
     in
-        model ! [ Cmd.map TimerMsg Timer.init, Cmd.map WeatherMsg Weather.init ]
+        model ! [ Cmd.map TimerMsg Timer.Init.init, Cmd.map WeatherMsg Weather.Init.init ]
 
 
 subscriptions : Model -> Sub Msg

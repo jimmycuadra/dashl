@@ -1,4 +1,4 @@
-module Weather exposing (init)
+module Weather.Init exposing (init)
 
 import Weather.Types
 

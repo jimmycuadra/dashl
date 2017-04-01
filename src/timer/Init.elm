@@ -1,4 +1,4 @@
-module Timer exposing (init)
+module Timer.Init exposing (init)
 
 import Task
 import Time exposing (Time)
