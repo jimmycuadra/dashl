@@ -8,46 +8,6 @@
   <link rel="stylesheet" href="css/dashboard.css" />
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row widget">
-      <div class="col">
-        <div class="row event-name">
-          <div class="col">
-            <h1><span id="timer-event-name" class="widget-subject"></span> in</h1>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-3">
-            <h2 class="timer-value" id="timer-event-days"></h2>
-            <div class="timer-unit">days</div>
-          </div>
-          <div class="col-3">
-            <h2 class="timer-value" id="timer-event-hours"></h2>
-            <div class="timer-unit">hours</div>
-          </div>
-          <div class="col-3">
-            <h2 class="timer-value" id="timer-event-mins"></h2>
-            <div class="timer-unit">mins</div>
-          </div>
-          <div class="col-3">
-            <h2 class="timer-value" id="timer-event-secs"></h2>
-            <div class="timer-unit">secs</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row widget">
-      <div class="col justify-content-center">
-        <div class="row">
-          <div class="col">
-            <h1>Weather in <span id="weather-zip-code" class="widget-subject"></span></h1>
-          </div>
-        </div>
-        <div class="row" id="weather-values">
-        </div>
-      </div>
-    </div>
-  </div>
   <script src="vendor/js/jquery-3.2.0.slim.min.js"></script>
   <script src="vendor/js/tether-1.4.0.min.js"></script>
   <script src="vendor/js/bootstrap.min.js"></script>
@@ -63,8 +23,7 @@
       request.onload = function () {
         if (this.status >= 200 && this.status < 400) {
             dashl_config = JSON.parse(this.response);
-            app = new Dashl(dashl_config);
-            app.start();
+            Elm.Main.fullscreen(dashl_config);
           } else {
             console.error(request);
           }

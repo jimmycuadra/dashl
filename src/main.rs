@@ -34,8 +34,7 @@ struct WeatherConfig {
     dark_sky_api_key: String,
     latitude: String,
     longitude: String,
-    #[serde(rename = "zipCode")]
-    zip_code: String,
+    name: String,
 }
 
 #[derive(Clone)]

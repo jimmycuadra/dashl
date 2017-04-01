@@ -7,6 +7,6 @@
     "darkSkyApiKey": "secret",
     "latitude": "latitude of the location you want forecasts for",
     "longitude": "longitude of the location you want forecasts for",
-    "zipCode": "the zip code corresponding to the lat/long, for display"
+    "name": "the display name of the location of the lat/long"
   }
 }
