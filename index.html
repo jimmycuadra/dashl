@@ -15,13 +15,12 @@
   <script type="text/javascript">
     $(function () {
       let dashl_config;
-      let app;
       let request = new XMLHttpRequest();
       request.open('GET', 'http://localhost:3000/config.json', true);
       request.onload = function () {
         if (this.status >= 200 && this.status < 400) {
             dashl_config = JSON.parse(this.response);
-            Elm.Main.fullscreen(dashl_config);
+            window.dashl = Elm.Main.fullscreen(dashl_config);
           } else {
             console.error(request);
           }
