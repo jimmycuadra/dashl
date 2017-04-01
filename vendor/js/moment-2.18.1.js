@@ -4460,4 +4460,8 @@ hooks.prototype             = proto;
 
 return hooks;
 
+<<<<<<< HEAD
 })));
+=======
+})));
+>>>>>>> Copy files over from the master branch.

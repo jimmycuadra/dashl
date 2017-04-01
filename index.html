@@ -55,14 +55,11 @@
   <script src="vendor/js/moment-2.18.1.js"></script>
   <script src="js/dashboard.js"></script>
   <script type="text/javascript">
-    ready(function () {
+    $(function () {
       let dashl_config;
       let app;
-
       let request = new XMLHttpRequest();
-
       request.open('GET', 'http://localhost:3000/config.json', true);
-
       request.onload = function () {
         if (this.status >= 200 && this.status < 400) {
             dashl_config = JSON.parse(this.response);
@@ -72,11 +69,9 @@
             console.error(request);
           }
       };
-
       request.onerror = function(event) {
         console.error('Connection error', event);
       };
-
       request.send();
     });
   </script>

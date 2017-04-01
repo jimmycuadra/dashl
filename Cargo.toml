@@ -4,7 +4,6 @@ name = "dashl"
 version = "0.0.0"
 
 [dependencies]
-futures = "0.1.11"
 hyper = "0.10.5"
 hyper-native-tls = "0.2.2"
 serde = "0.9.11"
