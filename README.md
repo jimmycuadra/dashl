@@ -6,15 +6,31 @@ It includes the following widgets:
 * Countdown timer
 * Local weather
 
-# Build dependencies
+# Dependencies
 
+* [Elm](http://www.elm-lang.org/)
+* [Make](https://www.gnu.org/software/make/)
 * [Rust](https://www.rust-lang.org/)
+
+# Setup
+
+Copy `js/config.sample.json` to `js/config.json` and fill in the values you want.
+Then run:
+
+``` bash
+$ make deps
+```
 
 ## Usage
 
-Copy `js/config.sample.json` to `js/config.json` and fill in the values you want.
-Run `cargo run` to build and start the proxy server.
-Then open `index.html` in a browser.
+Run:
+
+``` bash
+$ make run
+```
+
+This will compile the Elm and Rust code and start the proxy server.
+Then just open `index.html` in a browser!
 
 ## Legal
 
