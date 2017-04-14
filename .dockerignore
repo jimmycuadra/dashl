@@ -1,0 +1,12 @@
+.dockerignore
+.git
+.gitignore
+Cargo.lock
+Cargo.toml
+Dockerfile
+LICENSE
+Makefile
+README.md
+elm-package.json
+elm-stuff/
+src/

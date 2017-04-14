@@ -1,4 +1,5 @@
 /config/config.json
-/js/dashboard.js
+/docker-cargo-cache
 /elm-stuff
+/js/dashboard.js
 /target

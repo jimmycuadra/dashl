@@ -35,6 +35,28 @@ Browse to http://localhost:3000/ to see it.
 If you change any Elm code, run `make elm-make` to recompile it, and reload the page in your browser.
 If you change any Rust code, you'll need to interrupt the server with control-C and start it again with `make run`.
 
+## Deployment
+
+Build a Docker image by running:
+
+``` bash
+$ make docker-build
+```
+
+Use it by running:
+
+``` bash
+$ docker run -p 3000:3000 -e SSL_CERT_FILE=/certs/cert.pem -v $CERT_DIR:/certs -v $CONFIG_DIR:/app/config jimmycuadra/dashl:$TAG
+```
+
+where:
+
+* `$CERT_DIR` is the absolute path to a directory containing `cert.pem`, which are the CA certificates to trust
+* `$CONFIG_DIR` is the absolute path to a directory containing your config.json file
+* `$TAG` is whatever Docker tag was used in the build step
+
+The server will be running on port 3000 as usual.
+
 ## Legal
 
 Dashl is released under the MIT license.
