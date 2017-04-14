@@ -14,7 +14,7 @@ It includes the following widgets:
 
 # Setup
 
-Copy `js/config.sample.json` to `js/config.json` and fill in the values you want.
+Copy `config/config.sample.json` to `config/config.json` and fill in the values you want.
 Then run:
 
 ``` bash

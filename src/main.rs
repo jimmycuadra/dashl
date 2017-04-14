@@ -94,7 +94,7 @@ fn load_file(path: &str) -> Result<String, IoError> {
 }
 
 fn main() {
-    let config_contents = load_file("js/config.json").expect("config.json is missing");
+    let config_contents = load_file("config/config.json").expect("config/config.json is missing");
     let config: Config = serde_json::from_str(&config_contents).unwrap();
 
     let dashl = Dashl {
