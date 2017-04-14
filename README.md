@@ -29,8 +29,11 @@ Run:
 $ make run
 ```
 
-This will compile the Elm and Rust code and start the proxy server.
-Then just open `index.html` in a browser!
+This will compile the Elm and Rust code and start the server on port 3000 of all network interfaces.
+Browse to http://localhost:3000/ to see it.
+
+If you change any Elm code, run `make elm-make` to recompile it, and reload the page in your browser.
+If you change any Rust code, you'll need to interrupt the server with control-C and start it again with `make run`.
 
 ## Legal
 

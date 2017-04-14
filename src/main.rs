@@ -79,7 +79,44 @@ impl Handler for Dashl {
                     let mut streaming_response = response.start().unwrap();
                     io::copy(&mut api_response, &mut streaming_response).unwrap();
                 }
-                _ => *response.status_mut() = StatusCode::NotFound,
+                "/" | "index.html" => {
+                    {
+                        let mut headers = response.headers_mut();
+                        headers.set(ContentType("text/html".parse().unwrap()));
+                        headers.set(AccessControlAllowOrigin::Any);
+                    }
+
+                    response.send(load_file("index.html").unwrap().as_bytes()).unwrap();
+                }
+                path => {
+                    if path.ends_with(".js") {
+                        {
+                            let mut headers = response.headers_mut();
+                            headers.set(ContentType("application/javascript".parse().unwrap()));
+                            headers.set(AccessControlAllowOrigin::Any);
+                        }
+
+                        if let Ok(contents) = load_file(&path[1..path.len()]) {
+                            response.send(contents.as_bytes()).unwrap();
+                        } else {
+                            *response.status_mut() = StatusCode::NotFound;
+                        }
+                    } else if path.ends_with(".css") {
+                        {
+                            let mut headers = response.headers_mut();
+                            headers.set(ContentType("text/css".parse().unwrap()));
+                            headers.set(AccessControlAllowOrigin::Any);
+                        }
+
+                        if let Ok(contents) = load_file(&path[1..path.len()]) {
+                            response.send(contents.as_bytes()).unwrap();
+                        } else {
+                            *response.status_mut() = StatusCode::NotFound;
+                        }
+                    } else {
+                        *response.status_mut() = StatusCode::NotFound;
+                    }
+                }
             }
         }
     }
@@ -101,7 +138,7 @@ fn main() {
         config: config,
     };
 
-    let server = Server::http("127.0.0.1:3000").unwrap();
+    let server = Server::http("0.0.0.0:3000").unwrap();
     let _guard = server.handle(dashl);
-    println!("Listening on http://127.0.0.1:3000");
+    println!("Listening on http://0.0.0.0:3000");
 }
