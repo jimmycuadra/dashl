@@ -86,7 +86,9 @@ impl Handler for Dashl {
                         headers.set(AccessControlAllowOrigin::Any);
                     }
 
-                    response.send(load_file("index.html").unwrap().as_bytes()).unwrap();
+                    let mut streaming_response = response.start().unwrap();
+
+                    io::copy(&mut get_file("index.html").unwrap(), &mut streaming_response).unwrap();
                 }
                 path => {
                     if path.ends_with(".js") {
@@ -96,8 +98,13 @@ impl Handler for Dashl {
                             headers.set(AccessControlAllowOrigin::Any);
                         }
 
-                        if let Ok(contents) = load_file(&path[1..path.len()]) {
-                            response.send(contents.as_bytes()).unwrap();
+                        if let Ok(mut file) = get_file(&path[1..path.len()]) {
+                            let mut streaming_response = response.start().unwrap();
+
+                            io::copy(
+                                &mut file,
+                                &mut streaming_response,
+                            ).unwrap();
                         } else {
                             *response.status_mut() = StatusCode::NotFound;
                         }
@@ -108,8 +115,13 @@ impl Handler for Dashl {
                             headers.set(AccessControlAllowOrigin::Any);
                         }
 
-                        if let Ok(contents) = load_file(&path[1..path.len()]) {
-                            response.send(contents.as_bytes()).unwrap();
+                        if let Ok(mut file) = get_file(&path[1..path.len()]) {
+                            let mut streaming_response = response.start().unwrap();
+
+                            io::copy(
+                                &mut file,
+                                &mut streaming_response,
+                            ).unwrap();
                         } else {
                             *response.status_mut() = StatusCode::NotFound;
                         }
@@ -122,8 +134,12 @@ impl Handler for Dashl {
     }
 }
 
+fn get_file(path: &str) -> Result<File, IoError> {
+    File::open(path)
+}
+
 fn load_file(path: &str) -> Result<String, IoError> {
-    let mut file = File::open(path)?;
+    let mut file = get_file(path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
 
