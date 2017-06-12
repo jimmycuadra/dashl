@@ -19,11 +19,15 @@
       request.open('GET', 'http://localhost:3000/config.json', true);
       request.onload = function () {
         if (this.status >= 200 && this.status < 400) {
-            dashl_config = JSON.parse(this.response);
-            window.dashl = Elm.Main.fullscreen(dashl_config);
-          } else {
-            console.error(request);
-          }
+          const 24_HOURS = 864000000;
+          dashl_config = JSON.parse(this.response);
+          window.setTimeout(24_HOURS, function () {
+            window.location.reload();
+          });
+          window.dashl = Elm.Main.fullscreen(dashl_config);
+        } else {
+          console.error(request);
+        }
       };
       request.onerror = function(event) {
         console.error('Connection error', event);
