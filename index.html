@@ -19,9 +19,9 @@
       request.open('GET', 'http://localhost:3000/config.json', true);
       request.onload = function () {
         if (this.status >= 200 && this.status < 400) {
-          const 24_HOURS = 864000000;
+          const ONE_DAY = 864000000;
           dashl_config = JSON.parse(this.response);
-          window.setTimeout(24_HOURS, function () {
+          window.setTimeout(ONE_DAY, function () {
             window.location.reload();
           });
           window.dashl = Elm.Main.fullscreen(dashl_config);
