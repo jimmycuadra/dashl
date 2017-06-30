@@ -21,9 +21,10 @@
         if (this.status >= 200 && this.status < 400) {
           const ONE_DAY = 864000000;
           dashl_config = JSON.parse(this.response);
-          window.setTimeout(ONE_DAY, function () {
+          window.setTimeout(function () {
+            console.log("reloading app");
             window.location.reload();
-          });
+          }, ONE_DAY);
           window.dashl = Elm.Main.fullscreen(dashl_config);
         } else {
           console.error(request);
