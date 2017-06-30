@@ -4,9 +4,9 @@
     "repository": "https://github.com/jimmycuadra/dashl.git",
     "license": "MIT",
     "source-directories": [
-        "src",
-        "src/timer",
-        "src/weather"
+        "elm",
+        "elm/Timer",
+        "elm/Weather"
     ],
     "exposed-modules": [],
     "dependencies": {

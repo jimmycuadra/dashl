@@ -1,12 +1,11 @@
 .dockerignore
 .git
 .gitignore
-Cargo.lock
-Cargo.toml
 Dockerfile
 LICENSE
-Makefile
 README.md
-elm-package.json
+config/config.json
+docker-cargo-cache/
 elm-stuff/
-src/
+js/dashboard.js
+target/

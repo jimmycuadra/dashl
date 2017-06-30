@@ -8,7 +8,7 @@ run: elm-make
 
 .PHONY: deps
 deps:
-	elm package install
+	elm package install --yes
 
 .PHONY: docker-build
 docker-build:  musl-build
@@ -22,7 +22,7 @@ musl-build: docker-cargo-cache
 
 .PHONY: elm-make
 elm-make:
-	elm make src/Main.elm --warn --output js/dashboard.js
+	elm make elm/Main.elm --warn --output js/dashboard.js
 
 docker-cargo-cache:
 	mkdir docker-cargo-cache
