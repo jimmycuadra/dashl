@@ -1,0 +1,10 @@
+[Unit]
+Description=Dashl
+
+[Service]
+ExecStart=/home/pi/Code/dashl/target/release/dashl
+Restart=always
+WorkingDirectory=/home/pi/Code/dashl
+
+[Install]
+WantedBy=multi-user.target

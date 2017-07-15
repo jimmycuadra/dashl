@@ -1,0 +1,8 @@
+[Unit]
+Description=Turns the screen off at 10 PM
+
+[Timer]
+OnCalendar=*-*-* 22:00:00
+
+[Install]
+WantedBy=multi-user.target

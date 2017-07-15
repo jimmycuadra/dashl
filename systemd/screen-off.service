@@ -1,0 +1,8 @@
+[Unit]
+Description=Turns the screen off
+
+[Service]
+Type=oneshot
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/xset dpms force off
+Restart=no

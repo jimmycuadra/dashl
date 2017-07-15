@@ -1,0 +1,8 @@
+[Unit]
+Description=Turns the screen on at 7 AM
+
+[Timer]
+OnCalendar=*-*-* 07:00:00
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Turns the screen on
+
+[Service]
+Type=oneshot
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/xset dpms force on
+ExecStartPost=/usr/bin/xset -dpms
+Restart=no
