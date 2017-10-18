@@ -1,5 +1,6 @@
-module Weather.Types exposing (..)
+module Weather.Types exposing (Model, Msg(..), DarkSkyData, Daily, Forecast)
 
+import Time exposing (Time)
 import RemoteData exposing (WebData)
 
 
@@ -14,6 +15,7 @@ type alias Model =
 
 type Msg
     = RenderWeather (WebData DarkSkyData)
+    | RefreshWeather Time
 
 
 type alias DarkSkyData =

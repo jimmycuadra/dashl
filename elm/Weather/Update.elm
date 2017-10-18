@@ -14,6 +14,9 @@ update msg model =
         Weather.Types.RenderWeather response ->
             { model | darkSkyData = response } ! []
 
+        Weather.Types.RefreshWeather time ->
+            model ! [ Cmd.map WeatherMsg fetchForecasts ]
+
 
 fetchForecasts : Cmd Weather.Types.Msg
 fetchForecasts =
