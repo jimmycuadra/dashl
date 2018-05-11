@@ -1,34 +1,34 @@
+extern crate futures;
 extern crate hyper;
-extern crate hyper_native_tls;
+extern crate hyper_tls;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
 
-use std::io::{self, Error as IoError, Read};
-use std::fs::File;
+use std::fs::{read, read_to_string};
 
-use hyper::{Client, Server};
-use hyper::header::{AccessControlAllowOrigin, ContentType};
-use hyper::net::HttpsConnector;
-use hyper::server::{Handler, Request, Response};
-use hyper::status::StatusCode;
-use hyper::uri::RequestUri;
-use hyper_native_tls::NativeTlsClient;
+use futures::future::ok;
+use hyper::client::HttpConnector;
+use hyper::header::{ACCESS_CONTROL_ALLOW_ORIGIN, CONTENT_TYPE};
+use hyper::rt::{run, Future};
+use hyper::service::service_fn;
+use hyper::{Body, Client, Error, Request, Response, Server};
+use hyper_tls::HttpsConnector;
 
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct Config {
     timer: TimerConfig,
     weather: WeatherConfig,
 }
 
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct TimerConfig {
     name: String,
     time: String,
 }
 
-#[derive(Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct WeatherConfig {
     #[serde(rename = "darkSkyApiKey")]
     dark_sky_api_key: String,
@@ -37,124 +37,88 @@ struct WeatherConfig {
     name: String,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 struct Dashl {
     config: Config,
 }
 
-impl Handler for Dashl {
-    fn handle(&self, request: Request, mut response: Response) {
-        if let RequestUri::AbsolutePath(path) = request.uri {
-            match path.as_ref() {
-                "/config.json" => {
-                    {
-                        let mut headers = response.headers_mut();
-                        headers.set(ContentType("application/json".parse().unwrap()));
-                        headers.set(AccessControlAllowOrigin::Any);
-                    }
+fn app(
+    request: Request<Body>,
+    dashl: &Dashl,
+    client: &Client<HttpsConnector<HttpConnector>>,
+) -> Box<Future<Item = Response<Body>, Error = Error> + Send> {
+    match request.uri().path() {
+        "/config.json" => Box::new(ok(Response::builder()
+            .header(CONTENT_TYPE, "application/json")
+            .header(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .body(Body::from(serde_json::to_vec(&dashl.config).unwrap()))
+            .unwrap())),
+        "/forecast" => {
+            let url = format!(
+                    "https://api.darksky.net/forecast/{}/{},{}?exclude=currently,minutely,hourly,alerts,flags",
+                    &dashl.config.weather.dark_sky_api_key,
+                    &dashl.config.weather.latitude,
+                    &dashl.config.weather.longitude,
+                );
 
-                    response.send(&serde_json::to_vec(&self.config).unwrap()).unwrap();
-                }
-                "/forecast" => {
-                    let ssl = NativeTlsClient::new().unwrap();
-                    let connector = HttpsConnector::new(ssl);
-                    let client = Client::with_connector(connector);
+            Box::new(client.get(url.parse().unwrap()).and_then(|response| {
+                Ok(Response::builder()
+                    .header(CONTENT_TYPE, "application/json")
+                    .header(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                    .body(response.into_body())
+                    .unwrap())
+            }))
+        }
+        "/" | "index.html" => Box::new(ok(Response::builder()
+            .header(CONTENT_TYPE, "text/html")
+            .header(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+            .body(Body::from(read("index.html").unwrap()))
+            .unwrap())),
+        path => {
+            let mut builder = Response::builder();
 
-                    let url = format!(
-                        "https://api.darksky.net/forecast/{}/{},{}?exclude=currently,minutely,hourly,alerts,flags",
-                        &self.config.weather.dark_sky_api_key,
-                        &self.config.weather.latitude,
-                        &self.config.weather.longitude,
-                    );
+            builder.header(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 
-                    let mut api_response = client.get(&url).send().unwrap();
-                    *response.status_mut() = api_response.status;
+            let file = match read(&path[1..path.len()]) {
+                Ok(file) => file,
+                Err(_) => return Box::new(ok(builder.status(404).body(Body::empty()).unwrap())),
+            };
 
-                    {
-                        let mut headers = response.headers_mut();
-                        headers.set(ContentType("application/json".parse().unwrap()));
-                        headers.set(AccessControlAllowOrigin::Any);
-                    }
-
-                    let mut streaming_response = response.start().unwrap();
-                    io::copy(&mut api_response, &mut streaming_response).unwrap();
-                }
-                "/" | "index.html" => {
-                    {
-                        let mut headers = response.headers_mut();
-                        headers.set(ContentType("text/html".parse().unwrap()));
-                        headers.set(AccessControlAllowOrigin::Any);
-                    }
-
-                    let mut streaming_response = response.start().unwrap();
-
-                    io::copy(&mut get_file("index.html").unwrap(), &mut streaming_response).unwrap();
-                }
-                path => {
-                    if path.ends_with(".js") {
-                        {
-                            let mut headers = response.headers_mut();
-                            headers.set(ContentType("application/javascript".parse().unwrap()));
-                            headers.set(AccessControlAllowOrigin::Any);
-                        }
-
-                        if let Ok(mut file) = get_file(&path[1..path.len()]) {
-                            let mut streaming_response = response.start().unwrap();
-
-                            io::copy(
-                                &mut file,
-                                &mut streaming_response,
-                            ).unwrap();
-                        } else {
-                            *response.status_mut() = StatusCode::NotFound;
-                        }
-                    } else if path.ends_with(".css") {
-                        {
-                            let mut headers = response.headers_mut();
-                            headers.set(ContentType("text/css".parse().unwrap()));
-                            headers.set(AccessControlAllowOrigin::Any);
-                        }
-
-                        if let Ok(mut file) = get_file(&path[1..path.len()]) {
-                            let mut streaming_response = response.start().unwrap();
-
-                            io::copy(
-                                &mut file,
-                                &mut streaming_response,
-                            ).unwrap();
-                        } else {
-                            *response.status_mut() = StatusCode::NotFound;
-                        }
-                    } else {
-                        *response.status_mut() = StatusCode::NotFound;
-                    }
-                }
+            if path.ends_with(".js") {
+                builder.header(CONTENT_TYPE, "application/javascript");
+            } else if path.ends_with(".css") {
+                builder.header(CONTENT_TYPE, "text/css");
+            } else {
+                return Box::new(ok(builder.status(404).body(Body::empty()).unwrap()));
             }
+
+            Box::new(ok(builder.body(Body::from(file)).unwrap()))
         }
     }
 }
 
-fn get_file(path: &str) -> Result<File, IoError> {
-    File::open(path)
-}
-
-fn load_file(path: &str) -> Result<String, IoError> {
-    let mut file = get_file(path)?;
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
-
-    Ok(contents)
-}
-
 fn main() {
-    let config_contents = load_file("config/config.json").expect("config/config.json is missing");
+    let config_contents =
+        read_to_string("config/config.json").expect("config/config.json is missing");
     let config: Config = serde_json::from_str(&config_contents).unwrap();
 
-    let dashl = Dashl {
-        config: config,
+    let dashl = Dashl { config: config };
+
+    let https = HttpsConnector::new(4).unwrap();
+    let client = Client::builder().build::<_, Body>(https);
+
+    let new_service = move || {
+        let client = client.clone();
+        let dashl = dashl.clone();
+
+        service_fn(move |req| app(req, &dashl, &client))
     };
 
-    let server = Server::http("0.0.0.0:3000").unwrap();
-    let _guard = server.handle(dashl);
-    println!("Listening on http://0.0.0.0:3000");
+    let server = Server::bind(&([0, 0, 0, 0], 3000).into())
+        .serve(new_service)
+        .map_err(|error| {
+            eprintln!("ERROR: {}", error);
+        });
+
+    run(server);
 }
